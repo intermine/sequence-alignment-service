@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const clustalOmega = require('clustal-omega-wrapper');
+const path = require('path');
+
+clustalOmega.setCustomLocation(path.join(__dirname, './bin'));
 
 app.use(bodyParser.json());
 
@@ -17,11 +21,15 @@ app.post('/align-sequence', (req, res) => {
 		return res
 			.status(400)
 			.json({ error: true, message: 'No sequence sent!' })
-			.end();
 	}
 
-	
-	
+  clustalOmega.alignSeqString(req.body.sequence, 'fasta', (err, data) => {
+		if (err) {
+			res.status(400).json({ error: err });
+		} else {
+			res.status(200).json({ error: false, data: data });
+		}
+	});
 });
 
 app.listen(process.env.PORT || 3000, () => {
