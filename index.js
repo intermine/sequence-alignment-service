@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const clustalOmega = require('clustal-omega-wrapper');
@@ -6,6 +7,7 @@ const path = require('path');
 
 clustalOmega.setCustomLocation(path.join(__dirname, './bin'));
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
